@@ -19,4 +19,4 @@ jobs:
         run: npm install -g newman
 
       - name: Run Newman tests
-        run: newman run tests/PokeAPI.postman_collectiontion.json
+        run: newman run tests/PokeAPI.postman_collection.json
