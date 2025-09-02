@@ -1,0 +1,216 @@
+{
+	"info": {
+		"_postman_id": "9f0b0712-8b21-48be-b748-9d59c822cd75",
+		"name": "PokeAPI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "45749368",
+		"_collection_link": "https://irina-4392799.postman.co/workspace/Irina's-Workspace~95fc77d0-697f-4073-8703-1fbaf113b141/collection/45749368-9f0b0712-8b21-48be-b748-9d59c822cd75?action=share&source=collection_link&creator=45749368"
+	},
+	"item": [
+		{
+			"name": "Get Pokemon List",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Парсим ответ\r",
+							"let response = pm.response.json();\r",
+							"\r",
+							"// Проверяем, что в ответе есть results\r",
+							"if (response.results && response.results.length >= 10) {\r",
+							"    for (let i = 0; i < 10; i++) {\r",
+							"        let url = response.results[i].url;\r",
+							"        let varName = `var${i+1}`;\r",
+							"        pm.collectionVariables.set(varName, url);\r",
+							"    }\r",
+							"    console.log(\"Первые 10 URL сохранены в переменные\");\r",
+							"} else {\r",
+							"    console.error(\"Недостаточно данных в ответе\");\r",
+							"}\r",
+							"\r",
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.expect(pm.response.code).to.equal(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response has the required fields\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData).to.be.an('object');\r",
+							"    pm.expect(responseData).to.have.all.keys('count', 'next', 'previous', 'results');\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Results is an array\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData).to.be.an('object');\r",
+							"    pm.expect(responseData.results).to.be.an('array');\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response time is less than 200ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Each result object contains valid name and url fields\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData).to.be.an('object');\r",
+							"    pm.expect(responseData.results).to.be.an('array').that.is.not.empty;\r",
+							"\r",
+							"    responseData.results.forEach(result => {\r",
+							"        pm.expect(result).to.be.an('object').that.includes.all.keys('name', 'url');\r",
+							"        pm.expect(result.name).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Name should not be empty\");\r",
+							"        pm.expect(result.url).to.be.a('string').and.to.have.lengthOf.at.least(1, \"URL should not be empty\");\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://pokeapi.co/api/v2/pokemon?limit=10000",
+					"protocol": "https",
+					"host": [
+						"pokeapi",
+						"co"
+					],
+					"path": [
+						"api",
+						"v2",
+						"pokemon"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "10000"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Next Request",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let response = pm.response.json();\r",
+							"\r",
+							"let abilities = response.abilities;\r",
+							"\r",
+							"// Проверим что abilities есть и что их длина равна 2\r",
+							"pm.test(\"У покемона две способности, обе не null\", function () {\r",
+							"    pm.expect(abilities.length).to.eql(2);\r",
+							"    \r",
+							"    abilities.forEach(function (abilityObj, index) {\r",
+							"        pm.expect(abilityObj.ability).to.not.be.null;\r",
+							"        pm.expect(abilityObj.ability.name).to.not.be.null;\r",
+							"    });\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{var5}}",
+					"host": [
+						"{{var5}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "var1",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "var2",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "var3",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "var4",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "var5",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "var6",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "var7",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "var8",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "var9",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "var10",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
